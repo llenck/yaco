@@ -24,9 +24,6 @@ yaco_create:
 	@ we don't need to set any arguments since we can just pass r0
 	bx r2
 
-yaco_switch:
-	
-
 yaco_exit:
 	@ restore callee-saved registers and lr
 	ldm r0, {r4-r11, sp, lr}
@@ -36,6 +33,37 @@ yaco_exit:
 	str r1, [r0, #36]
 
 	@ return to whoever yielded to the coroutine
+	bx lr
+
+yaco_switch:
+	@ get a backup of sp for later use
+	mov r12, sp
+
+	@ store registers on stack, moving sp between the two places we store registers at
+	stmfd sp!, {r4-r11, lr}
+
+	@ here, we need to use r2-r9 instead of r4-r11 so we still have a different
+	@ register than r12 free that is above the 8 registers we store most of the
+	@ registers in. this is necesaary because r12 is already in use and the registers
+	@ used with stm/ldm must be in ascending order
+
+	@ load saved registers (use r10 instead of sp, since we still need sp)
+	ldm r0, {r2-r9, r10, lr}
+	@ and save them to the stack, below the registers we want to swap with
+	stmfd sp, {r2-r9, r10, lr}
+
+	@ now load the registers we need to save again
+	ldm sp, {r4-r11, lr}
+	@ and save them, using our backup of the original sp in r12
+	stm r0, {r4-r11, r12, lr}
+
+	@ finally, load the registers we actually want to have from the stack
+	@ (we of course have a full descending stack, but since sp currently points to
+	@ the next byte above what we want to load, ldmea is the right choice here)
+	ldmea sp, {r4-r11, r12, lr}
+	mov sp, r12
+
+	@ "return" to the function/coroutine/whatever
 	bx lr
 
 #else
