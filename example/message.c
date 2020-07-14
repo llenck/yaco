@@ -1,16 +1,18 @@
 #include <assert.h>
 #include <stdio.h>
 
-#include "yaco.h"
+#include <yaco.h>
 
 void printer(struct yaco_coro_state* self) {
-	printf("starting printer service...\n");
-	__asm__ volatile ("mov r8, #123\n");
+	printf("starting coroutine...\n");
+
 	while (1) {
 		yaco_switch(self);
 		if (self->data == NULL) break;
 		printf("received message: %s\n", (const char*)self->data);
 	}
+
+	printf("stopping coroutine...\n");
 
 	yaco_exit(self);
 }
@@ -27,6 +29,10 @@ int main() {
 	yaco_switch(&co);
 	co.data = "General Kenobi. You are a bold one.";
 	yaco_switch(&co);
+	co.data = NULL;
+	yaco_switch(&co);
+
+	assert(yaco_is_finished(&co));
 
 	yaco_destroy_stack(&stk);
 }

@@ -1,7 +1,7 @@
 #include <assert.h>
 #include <stdio.h>
 
-#include "yaco.h"
+#include <yaco.h>
 
 void coro(struct yaco_coro_state* self) {
 	printf("received message: %s\n", (const char*)self->data);
