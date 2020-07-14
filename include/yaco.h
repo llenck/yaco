@@ -23,7 +23,7 @@ struct yaco_coro_state {
 // TODO platform specific attributes, eg for only using common regs on arm
 typedef void (*yaco_coro)(struct yaco_coro_state*);
 
-#define yaco_is_finished(x) (x->lr == 0)
+#define yaco_is_finished(x) ((x)->lr == 0)
 
 // creates a stack. returns 0 on failure, and non-zero otherwise
 int yaco_create_stack(struct yaco_stack* stk, uint32_t size);
