@@ -4,7 +4,7 @@
 
 #include <yaco.h>
 
-void count_down(struct yaco_coro_state* self) {
+void YACO_ATTRIBUTES count_down(struct yaco_coro_state* self) {
 	long int* counter = self->data;
 	while (--*counter > 0) {
 		yaco_switch(self);

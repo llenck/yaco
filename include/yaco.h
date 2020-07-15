@@ -20,7 +20,7 @@ struct yaco_coro_state {
 	void* data;
 } __attribute__((packed));
 
-// TODO platform specific attributes, eg for only using common regs on arm
+#define YACO_ATTRIBUTES __attribute__((target("general-regs-only")))
 typedef void (*yaco_coro)(struct yaco_coro_state*);
 
 #define yaco_is_finished(x) ((x)->lr == 0)
