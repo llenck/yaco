@@ -41,5 +41,8 @@ int main() {
 	printf("Performed %ld context switches in %ld.%06lds\n", x * 2, diff_usec / 1000000,
 	       diff_usec % 1000000);
 
+	long long unsigned int ns_per_switch = diff_usec * 1000 / (x * 2);
+	printf("(took less than %lluns per context switch)\n", ns_per_switch);
+
 	return 0;
 }

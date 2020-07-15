@@ -1,4 +1,4 @@
-CFLAGS += -Wall -Wextra -Wpedantic -std=gnu99
+CFLAGS += -Wall -Wextra -Wpedantic -std=gnu99 -O3
 INCLUDEDIRS := -I ../include
 LIBS := ../libyaco_static.a
 
