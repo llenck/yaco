@@ -13,6 +13,7 @@ struct yaco_coro_state {
 	uint32_t preserved_regs[8]; // r4 - r11
 	uint32_t sp;
 	uint32_t lr;
+	uint64_t preserved_fp_regs[8]; // d8 - d15
 #else
 #	error platform not supported (yet)
 #endif

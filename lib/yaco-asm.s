@@ -12,6 +12,11 @@ yaco_create:
 	@ save previous environment to the coroutine state given as our first argument
 	stm r0, {r4-r11, sp, lr}
 
+	@ save floating point registers (only d8 - d15 need to be saved)
+	add r0, r0, #40
+	vstm.F64 r0, {d8-d15}
+	sub r0, r0, #40
+
 	@ load new stack pointer (base + len, since the stack grows down). Don't store this
 	@ in sp yet since sp might have a requirement to be 16-aligned. This will cause sp to
 	@ point to the next element that doesn't belong to the stack, which is exactly right
@@ -61,6 +66,27 @@ yaco_switch:
 	ldm sp, {r4-r11, lr}
 	@ and save them, using our backup of the original sp in r12
 	stm r0, {r4-r11, r12, lr}
+
+	@ now, also switch the floating point registers. To do so, we add 40 to r0 so that
+	@ points to r0->preserved_fp_regs and we can use vldm and vstm with it
+	add r0, r0, #40
+
+	@ first load the values we want to restore (we restore move them to d8 - d15 later)
+	vldm.F64 r0, {d0-d7}
+
+	@ then save the callee-saved registers
+	vstm.F64 r0, {d8-d15}
+
+	@ then restore the callee-saved registers from the coroutine we want to switch to
+	@ from our backup in d0 - d7
+	vmov.F64 d8, d0
+	vmov.F64 d9, d1
+	vmov.F64 d10, d2
+	vmov.F64 d11, d3
+	vmov.F64 d12, d4
+	vmov.F64 d13, d5
+	vmov.F64 d14, d6
+	vmov.F64 d15, d7
 
 	@ finally, load the registers we actually want to have from the stack
 	ldmdb sp, {r4-r11, r12, lr}
