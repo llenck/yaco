@@ -3,7 +3,7 @@
 
 #include <yaco.h>
 
-void YACO_ATTRIBUTES coro(struct yaco_coro_state* self) {
+void coro(struct yaco_coro_state* self) {
 	printf("received message: %s\n", (const char*)self->data);
 	yaco_exit(self);
 }

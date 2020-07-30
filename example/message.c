@@ -3,7 +3,7 @@
 
 #include <yaco.h>
 
-void YACO_ATTRIBUTES printer(struct yaco_coro_state* self) {
+void printer(struct yaco_coro_state* self) {
 	printf("starting coroutine...\n");
 
 	while (1) {
