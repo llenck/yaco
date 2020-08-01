@@ -21,8 +21,6 @@ struct yaco_coro_state {
 	void* data;
 } __attribute__((packed));
 
-// still define YACO_ATTRIBUTES even if we don't need it anymore, so old code still works
-#define YACO_ATTRIBUTES
 typedef void (*yaco_coro)(struct yaco_coro_state*);
 
 #define yaco_is_finished(x) ((x)->lr == 0)
