@@ -23,8 +23,8 @@ yaco_create:
 	@ since on armv7, we use use a full-descending stack
 	add r12, r3, r12
 	@ round the stack pointer down to a multiple of 16
-	lsl r12, r12, #4
-	lsr sp, r12, #4
+	lsr r12, r12, #4
+	lsl sp, r12, #4
 
 	@ call coroutine, whose address is given as our third argument
 	@ (no bl since we don't use lr for returning anyway)
